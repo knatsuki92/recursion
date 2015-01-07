@@ -18,28 +18,35 @@ var stringifyJSON = function(obj) {
 		stringifyJSON(true) = "true"
 		stringifyJSON('true') = ""true""
   */
-var outputJSON = "";
+	var outputJSON = "";
 
-//case: value
-if(!Array.isArray(obj) && typeof(obj) !== 'object'){
-	outputJSON += obj;
-	if(typeof(obj) === 'string'){
-		outputJSON = "\"" + outputJSON + "\""; //strings are double-quoted.
+	//case: value
+	if(!Array.isArray(obj) && typeof(obj) !== 'object'){
+		outputJSON += obj;
+		if(typeof(obj) === 'string'){
+			outputJSON = "\"" + outputJSON + "\""; //strings are double-quoted.
+		}
 	}
-	return outputJSON;
-}
-//case: object
-else if(typeof(obj) === 'object'){
-	outputJSON += "{"
-	for(var child in obj){
-		outputJSON += "\"" + child + "\":" + stringifyJSON(obj[child]) +","; //using recursion here
+	//case: array
+	//*NOTE: it's crucial for array case to be considered before the object case since typeof(array) === 'object' is true.
+	else if(Array.isArray(obj)){
+		outputJSON += "[";
+		for(var i = 0; i < obj.length; i++){
+			outputJSON += stringifyJSON(obj[i]) + ","; //using recursion here as well.
+		}
+		outputJSON = outputJSON.substr(0,outputJSON.length-1); //delete the last comma.
+		outputJSON += "]";
 	}
-	outputJSON = outputJSON.substr(0,outputJSON.length-1); //delete the last comma.
-	outputJSON += "}";
-	return outputJSON;
-}
-else if (Array.isArray(obj)){
+	//case: object
+	else if(typeof(obj) === 'object'){
+		outputJSON += "{"
+		for(var child in obj){
+			outputJSON += "\"" + child + "\":" + stringifyJSON(obj[child]) + ","; //using recursion here.
+		}
+		outputJSON = outputJSON.substr(0,outputJSON.length-1); //delete the last comma.
+		outputJSON += "}";
+	}
 
-}
+	return outputJSON;
 
 };
