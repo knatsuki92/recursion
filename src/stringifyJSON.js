@@ -5,6 +5,8 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
+  //Initial outline of my approach. 
+  	//Start with the most rudimentary element and build up using recursion.
   //Three different parts: 1. object, 2. array, 3. values
   /*
   	case 1: Object
