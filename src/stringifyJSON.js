@@ -5,4 +5,41 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
+  //Three different parts: 1. object, 2. array, 3. values
+  /*
+  	case 1: Object
+		stringifyJSON({a : 3}) = "{"a" = 3}"
+		stringifyJSON({d: {da:8}}) = "{"d":{"da":8}}"
+	case 2: Array
+		stringifyJSON([1, 2, 3])= "[1, 2 ,3]"
+		stringifyJSON([{a:3}, {b: true}, {c: 'hello'}, false, 'bye', null], [6,7], {d: {da:8}}])) = "[{"a":3},{"b":true},{"c":"hello"},false,"bye",null,[6,7], {"d":{"da":8}}]"
+	case 3: Value
+		stringifyJSON(1) = "1"
+		stringifyJSON(true) = "true"
+		stringifyJSON('true') = ""true""
+  */
+var outputJSON = "";
+
+//case: value
+if(!Array.isArray(obj) && typeof(obj) !== 'object'){
+	outputJSON += obj;
+	if(typeof(obj) === 'string'){
+		outputJSON = "\"" + outputJSON + "\""; //strings are double-quoted.
+	}
+	return outputJSON;
+}
+//case: object
+else if(typeof(obj) === 'object'){
+	outputJSON += "{"
+	for(var child in obj){
+		outputJSON += "\"" + child + "\":" + stringifyJSON(obj[child]) +","; //using recursion here
+	}
+	outputJSON = outputJSON.substr(0,outputJSON.length-1); //delete the last comma.
+	outputJSON += "}";
+	return outputJSON;
+}
+else if (Array.isArray(obj)){
+
+}
+
 };
