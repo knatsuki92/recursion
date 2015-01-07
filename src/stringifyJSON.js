@@ -21,8 +21,13 @@ var stringifyJSON = function(obj) {
 		stringifyJSON(null) = "null"
   */
 	var outputJSON = "";
+	//case: function & undefined
+	if(typeof(obj) === 'function' || obj === undefined){
+		return undefined;
+	}
+
 	//case: null
-	if(obj === null){
+	else if(obj === null){
 		outputJSON += obj;
 		return outputJSON;
 	}
@@ -39,7 +44,11 @@ var stringifyJSON = function(obj) {
 	else if(Array.isArray(obj)){
 		outputJSON += "[";
 		for(var i = 0; i < obj.length; i++){
-			outputJSON += stringifyJSON(obj[i]) + ","; //using recursion here as well.
+			if(typeof(obj[i]) !== 'function' && obj[i] !== undefined){
+				outputJSON += stringifyJSON(obj[i]) + ","; //using recursion here as well.
+			} else{
+				outputJSON += "null," //case: return null for function and undefined values within array.
+			}
 		}
 		if(obj.length > 0) { //only if it isn't an empty array
 			outputJSON = outputJSON.substr(0,outputJSON.length - 1); //delete the last comma.
@@ -53,7 +62,7 @@ var stringifyJSON = function(obj) {
 
 		var numChild = 0; //check for empty set.
 		for(var child in obj){
-			if(typeof(obj[child]) !== 'function' && obj[child] !== undefined){ //skip for functions and undefined.
+			if(typeof(obj[child]) !== 'function' && obj[child] !== undefined){ //skip for functions and undefined within object.
 				outputJSON += "\"" + child + "\":" + stringifyJSON(obj[child]) + ","; //using recursion here.
 				numChild += 1;
 			}
